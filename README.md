@@ -9,6 +9,9 @@ This is a plugin written for the Adamant add-on called "Hand To Hand".
 ## Requirements
 * [CMake](https://cmake.org/)
 	* Add this to your `PATH`
+* [CommonLibVR](https://github.com/alandtse/CommonLibVR/tree/vr)
+	* Set environment variable `CommonLibVRPath` to CommonLibVR location.
+* Set environment varaible `SkyrimVRPath` to Skyrim VR location
 	
 ## Register Visual Studio as a Generator
 * Open `x64 Native Tools Command Prompt`
@@ -19,6 +22,5 @@ This is a plugin written for the Adamant add-on called "Hand To Hand".
 ```
 git clone 
 cd HandToHand
-git submodule update --init --recursive
 cmake . -B build -DBUILD_SKYRIMVR=On
 ```
