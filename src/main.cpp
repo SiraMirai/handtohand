@@ -1,7 +1,7 @@
 #include "PickpocketReplace.h"
 #include "Events.h"
 
-/*	1.5.97 Necessary
+/*	1.5.97 Necessary	*/
 extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface * a_skse, SKSE::PluginInfo * a_info)
 {
 #ifndef NDEBUG
@@ -41,14 +41,20 @@ extern "C" DLLEXPORT bool SKSEAPI SKSEPlugin_Query(const SKSE::QueryInterface * 
 	}
 
 	const auto ver = a_skse->RuntimeVersion();
-	if (ver < SKSE::RUNTIME_1_5_39) {
+	if (ver < 
+#ifndef SKYRIMVR
+	SKSE::RUNTIME_1_5_39
+#else
+	SKSE::RUNTIME_VR_1_4_15
+#endif
+	) {
 		logger::critical(FMT_STRING("Unsupported runtime version {}"), ver.string());
 		return false;
 	}
 
 	return true;
 }
-*/
+
 
 
 void InitLogger()
@@ -85,7 +91,7 @@ extern "C" DLLEXPORT constexpr auto SKSEPlugin_Version =
 	SKSE::PluginVersionData v{};
 	v.PluginVersion(Version::MAJOR);
 	v.PluginName(Version::PROJECT);
-	v.AuthorName("colinswrath"sv);
+	v.AuthorName("colinswrath, edited for VR by SiraMirai"sv);
 	v.UsesAddressLibrary(true);
 	return v;
 }();

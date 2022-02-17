@@ -12,8 +12,26 @@ macro(set_from_environment VARIABLE)
 	endif ()
 endmacro()
 
-set_from_environment(Skyrim64Path)
 set_from_environment(VCPKG_ROOT)
+
+if(BUILD_SKYRIMVR)
+	add_compile_definitions(SKYRIMVR)
+	set_from_environment(CommonLibVRPath)
+	set(CommonLibPath ${CommonLibVRPath})
+	set(CommonLibName "CommonLibVR")
+	set_from_environment(SkyrimVRPath)
+	set(SkyrimPath ${SkyrimVRPath})
+	set(SkyrimVersion "Skyrim VR")
+	
+else()
+	set_from_environment(CommonLibSSEPath)
+	set(CommonLibPath ${CommonLibSSEPath})
+	set(CommonLibName "CommonLibSSE")
+	set_from_environment(Skyrim64Path)
+	set(SkyrimPath ${Skyrim64Path})
+	set(SkyrimVersion "Skyrim SSE")
+endif()
+	
 
 if (DEFINED VCPKG_ROOT)
 	set(CMAKE_TOOLCHAIN_FILE "${VCPKG_ROOT}/scripts/buildsystems/vcpkg.cmake" CACHE STRING "")
@@ -79,7 +97,7 @@ set(Boost_USE_STATIC_LIBS ON)
 
 # ---- Dependencies ----
 
-add_subdirectory("extern/CommonLibSSE" CommonLibSSE)
+add_subdirectory(${CommonLibPath} ${CommonLibName})
 
 find_package(spdlog REQUIRED CONFIG)
 
@@ -135,7 +153,7 @@ target_include_directories(
 target_link_libraries(
 	${PROJECT_NAME}
 	PRIVATE
-		CommonLibSSE::CommonLibSSE
+		${CommonLibName}::${CommonLibName}
 		spdlog::spdlog
 )
 
@@ -200,17 +218,17 @@ target_precompile_headers(
 # ---- Post build ----
 
 if (COPY_BUILD)
-	if (DEFINED Skyrim64Path)
+	if (DEFINED SkyrimPath)
 		add_custom_command(
 			TARGET ${PROJECT_NAME}
 			POST_BUILD
-			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${Skyrim64Path}/Data/SKSE/Plugins/
-			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:${PROJECT_NAME}> ${Skyrim64Path}/Data/SKSE/Plugins/
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_FILE:${PROJECT_NAME}> ${SkyrimPath}/Data/SKSE/Plugins/
+			COMMAND ${CMAKE_COMMAND} -E copy $<TARGET_PDB_FILE:${PROJECT_NAME}> ${SkyrimPath}/Data/SKSE/Plugins/
 		)
 	else ()
 		message(
 			WARNING
-			"Variable Skyrim64Path is not defined. Skipping post-build copy command."
+			"Variable SkyrimPath is not defined. Skipping post-build copy command."
 		)
 	endif ()
 endif ()
