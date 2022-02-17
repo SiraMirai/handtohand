@@ -20,5 +20,5 @@ This is a plugin written for the Adamant add-on called "Hand To Hand".
 git clone 
 cd HandToHand
 git submodule update --init --recursive
-cmake -B build -S .
+cmake . -B build -DBUILD_SKYRIMVR=On
 ```
